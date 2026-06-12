@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useWorkspace, TONE_LABEL } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
+import { AppShell } from "@/components/app-shell";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · Autopilot" }] }),
@@ -22,7 +23,8 @@ function Dashboard() {
   const greeting = state.organization.tone === "energetic" ? "Let's go" : state.organization.tone === "casual" ? "Hey" : "Welcome back";
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <AppShell>
+      <div className="mx-auto max-w-6xl space-y-6">
       <div
         className="overflow-hidden rounded-2xl border p-6 sm:p-8 text-white shadow-sm"
         style={{ background: `linear-gradient(135deg, ${state.organization.primaryColor}, ${state.organization.secondaryColor})` }}
@@ -88,6 +90,7 @@ function Dashboard() {
           </CardContent>
         </Card>
       </div>
-    </div>
+      </div>
+    </AppShell>
   );
 }

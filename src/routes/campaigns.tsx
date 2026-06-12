@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useWorkspace } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
+import { AppShell } from "@/components/app-shell";
 
 export const Route = createFileRoute("/campaigns")({
   head: () => ({ meta: [{ title: "Campaigns · Autopilot" }] }),
@@ -15,7 +16,8 @@ function Campaigns() {
   const { state } = useWorkspace();
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <AppShell>
+      <div className="mx-auto max-w-5xl space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Campaigns</h1>
@@ -50,6 +52,7 @@ function Campaigns() {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </AppShell>
   );
 }
