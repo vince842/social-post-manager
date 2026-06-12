@@ -37,18 +37,26 @@ function Campaigns() {
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {state.campaigns.map((c) => (
-            <Card key={c.id} className="rounded-2xl">
-              <CardContent className="p-5">
-                <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-semibold">{c.name}</h3>
-                  <Badge variant="secondary">{c.status}</Badge>
-                </div>
-                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{c.description}</p>
-                <div className="mt-3 text-xs text-muted-foreground">
-                  Event: {formatDate(c.eventDate)} · {c.posts.filter((p) => p.enabled).length} posts scheduled
-                </div>
-              </CardContent>
-            </Card>
+            <Link
+              key={c.id}
+              to="/campaigns/$id"
+              params={{ id: c.id }}
+              className="block rounded-2xl transition hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <Card className="rounded-2xl">
+                <CardContent className="p-5">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="font-semibold">{c.name}</h3>
+                    <Badge variant="secondary">{c.status}</Badge>
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{c.description}</p>
+                  <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Event: {formatDate(c.eventDate)} · {c.posts.filter((p) => p.enabled).length} posts</span>
+                    <span className="font-medium text-primary">Edit →</span>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       )}
