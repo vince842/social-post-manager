@@ -75,7 +75,13 @@ type Action =
 function reducer(state: WorkspaceState, action: Action): WorkspaceState {
   switch (action.type) {
     case "HYDRATE":
-      return action.state;
+      return {
+        ...defaultState,
+        ...action.state,
+        organization: { ...defaultState.organization, ...(action.state?.organization ?? {}) },
+        connections: { ...defaultState.connections, ...(action.state?.connections ?? {}) },
+        campaigns: Array.isArray(action.state?.campaigns) ? action.state.campaigns : [],
+      };
     case "UPDATE_ORG":
       return { ...state, organization: { ...state.organization, ...action.patch } };
     case "COMPLETE_ONBOARDING":
