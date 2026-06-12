@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
+import { Route as AppCampaignsNewRouteImport } from './routes/_app.campaigns.new'
 
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
@@ -39,32 +40,45 @@ const AppCampaignsRoute = AppCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCampaignsNewRoute = AppCampaignsNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppCampaignsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
-  '/campaigns': typeof AppCampaignsRoute
+  '/campaigns': typeof AppCampaignsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/campaigns/new': typeof AppCampaignsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
-  '/campaigns': typeof AppCampaignsRoute
+  '/campaigns': typeof AppCampaignsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/campaigns/new': typeof AppCampaignsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
-  '/_app/campaigns': typeof AppCampaignsRoute
+  '/_app/campaigns': typeof AppCampaignsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/campaigns/new': typeof AppCampaignsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/onboarding' | '/campaigns' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/onboarding'
+    | '/campaigns'
+    | '/dashboard'
+    | '/campaigns/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/onboarding' | '/campaigns' | '/dashboard'
+  to: '/' | '/onboarding' | '/campaigns' | '/dashboard' | '/campaigns/new'
   id:
     | '__root__'
     | '/'
@@ -72,6 +86,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/_app/campaigns'
     | '/_app/dashboard'
+    | '/_app/campaigns/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,16 +132,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCampaignsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/campaigns/new': {
+      id: '/_app/campaigns/new'
+      path: '/new'
+      fullPath: '/campaigns/new'
+      preLoaderRoute: typeof AppCampaignsNewRouteImport
+      parentRoute: typeof AppCampaignsRoute
+    }
   }
 }
 
+interface AppCampaignsRouteChildren {
+  AppCampaignsNewRoute: typeof AppCampaignsNewRoute
+}
+
+const AppCampaignsRouteChildren: AppCampaignsRouteChildren = {
+  AppCampaignsNewRoute: AppCampaignsNewRoute,
+}
+
+const AppCampaignsRouteWithChildren = AppCampaignsRoute._addFileChildren(
+  AppCampaignsRouteChildren,
+)
+
 interface AppRouteChildren {
-  AppCampaignsRoute: typeof AppCampaignsRoute
+  AppCampaignsRoute: typeof AppCampaignsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
-  AppCampaignsRoute: AppCampaignsRoute,
+  AppCampaignsRoute: AppCampaignsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
 }
 
