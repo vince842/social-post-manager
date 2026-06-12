@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
+import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
 import { Route as AppBrandRouteImport } from './routes/_app.brand'
 import { Route as AppCampaignsNewRouteImport } from './routes/_app.campaigns.new'
 
@@ -41,6 +42,11 @@ const AppCampaignsRoute = AppCampaignsRouteImport.update({
   path: '/campaigns',
   getParentRoute: () => AppRoute,
 } as any)
+const AppCalendarRoute = AppCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppBrandRoute = AppBrandRouteImport.update({
   id: '/brand',
   path: '/brand',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/brand': typeof AppBrandRoute
+  '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/campaigns/new': typeof AppCampaignsNewRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/onboarding': typeof OnboardingRoute
   '/brand': typeof AppBrandRoute
+  '/calendar': typeof AppCalendarRoute
   '/campaigns': typeof AppCampaignsRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/campaigns/new': typeof AppCampaignsNewRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/onboarding': typeof OnboardingRoute
   '/_app/brand': typeof AppBrandRoute
+  '/_app/calendar': typeof AppCalendarRoute
   '/_app/campaigns': typeof AppCampaignsRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/campaigns/new': typeof AppCampaignsNewRoute
@@ -84,6 +93,7 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/brand'
+    | '/calendar'
     | '/campaigns'
     | '/dashboard'
     | '/campaigns/new'
@@ -92,6 +102,7 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/brand'
+    | '/calendar'
     | '/campaigns'
     | '/dashboard'
     | '/campaigns/new'
@@ -101,6 +112,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/onboarding'
     | '/_app/brand'
+    | '/_app/calendar'
     | '/_app/campaigns'
     | '/_app/dashboard'
     | '/_app/campaigns/new'
@@ -149,6 +161,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCampaignsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/calendar': {
+      id: '/_app/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof AppCalendarRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/brand': {
       id: '/_app/brand'
       path: '/brand'
@@ -180,12 +199,14 @@ const AppCampaignsRouteWithChildren = AppCampaignsRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppBrandRoute: typeof AppBrandRoute
+  AppCalendarRoute: typeof AppCalendarRoute
   AppCampaignsRoute: typeof AppCampaignsRouteWithChildren
   AppDashboardRoute: typeof AppDashboardRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppBrandRoute: AppBrandRoute,
+  AppCalendarRoute: AppCalendarRoute,
   AppCampaignsRoute: AppCampaignsRouteWithChildren,
   AppDashboardRoute: AppDashboardRoute,
 }
