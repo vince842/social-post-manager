@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useWorkspace, ORG_TYPE_LABEL, TONE_LABEL } from "@/lib/workspace-context";
 
-export const Route = createFileRoute("/_app/brand")({
+export const Route = createFileRoute("/brand")({
   head: () => ({ meta: [{ title: "Brand Assets · Autopilot" }] }),
   component: Brand,
 });

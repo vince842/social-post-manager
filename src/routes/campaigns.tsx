@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useWorkspace } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
 
-export const Route = createFileRoute("/_app/campaigns")({
+export const Route = createFileRoute("/campaigns")({
   head: () => ({ meta: [{ title: "Campaigns · Autopilot" }] }),
   component: Campaigns,
 });

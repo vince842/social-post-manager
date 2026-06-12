@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { useWorkspace, TONE_LABEL } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
 
-export const Route = createFileRoute("/_app/dashboard")({
+export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard · Autopilot" }] }),
   component: Dashboard,
 });
