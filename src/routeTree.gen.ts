@@ -9,23 +9,43 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
-import { Route as AppRouteImport } from './routes/_app'
+import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CampaignsRouteImport } from './routes/campaigns'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as BrandRouteImport } from './routes/brand'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppSettingsRouteImport } from './routes/_app.settings'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as AppCampaignsRouteImport } from './routes/_app.campaigns'
-import { Route as AppCalendarRouteImport } from './routes/_app.calendar'
-import { Route as AppBrandRouteImport } from './routes/_app.brand'
-import { Route as AppCampaignsNewRouteImport } from './routes/_app.campaigns.new'
+import { Route as CampaignsNewRouteImport } from './routes/campaigns.new'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const OnboardingRoute = OnboardingRouteImport.update({
   id: '/onboarding',
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppRoute = AppRouteImport.update({
-  id: '/_app',
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CampaignsRoute = CampaignsRouteImport.update({
+  id: '/campaigns',
+  path: '/campaigns',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrandRoute = BrandRouteImport.update({
+  id: '/brand',
+  path: '/brand',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -33,111 +53,95 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCampaignsRoute = AppCampaignsRouteImport.update({
-  id: '/campaigns',
-  path: '/campaigns',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCalendarRoute = AppCalendarRouteImport.update({
-  id: '/calendar',
-  path: '/calendar',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppBrandRoute = AppBrandRouteImport.update({
-  id: '/brand',
-  path: '/brand',
-  getParentRoute: () => AppRoute,
-} as any)
-const AppCampaignsNewRoute = AppCampaignsNewRouteImport.update({
+const CampaignsNewRoute = CampaignsNewRouteImport.update({
   id: '/new',
   path: '/new',
-  getParentRoute: () => AppCampaignsRoute,
+  getParentRoute: () => CampaignsRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/brand': typeof BrandRoute
+  '/calendar': typeof CalendarRoute
+  '/campaigns': typeof CampaignsRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
-  '/brand': typeof AppBrandRoute
-  '/calendar': typeof AppCalendarRoute
-  '/campaigns': typeof AppCampaignsRouteWithChildren
-  '/dashboard': typeof AppDashboardRoute
-  '/settings': typeof AppSettingsRoute
-  '/campaigns/new': typeof AppCampaignsNewRoute
+  '/settings': typeof SettingsRoute
+  '/campaigns/new': typeof CampaignsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/brand': typeof BrandRoute
+  '/calendar': typeof CalendarRoute
+  '/campaigns': typeof CampaignsRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
-  '/brand': typeof AppBrandRoute
-  '/calendar': typeof AppCalendarRoute
-  '/campaigns': typeof AppCampaignsRouteWithChildren
-  '/dashboard': typeof AppDashboardRoute
-  '/settings': typeof AppSettingsRoute
-  '/campaigns/new': typeof AppCampaignsNewRoute
+  '/settings': typeof SettingsRoute
+  '/campaigns/new': typeof CampaignsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_app': typeof AppRouteWithChildren
+  '/brand': typeof BrandRoute
+  '/calendar': typeof CalendarRoute
+  '/campaigns': typeof CampaignsRouteWithChildren
+  '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
-  '/_app/brand': typeof AppBrandRoute
-  '/_app/calendar': typeof AppCalendarRoute
-  '/_app/campaigns': typeof AppCampaignsRouteWithChildren
-  '/_app/dashboard': typeof AppDashboardRoute
-  '/_app/settings': typeof AppSettingsRoute
-  '/_app/campaigns/new': typeof AppCampaignsNewRoute
+  '/settings': typeof SettingsRoute
+  '/campaigns/new': typeof CampaignsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/onboarding'
     | '/brand'
     | '/calendar'
     | '/campaigns'
     | '/dashboard'
+    | '/onboarding'
     | '/settings'
     | '/campaigns/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/onboarding'
     | '/brand'
     | '/calendar'
     | '/campaigns'
     | '/dashboard'
+    | '/onboarding'
     | '/settings'
     | '/campaigns/new'
   id:
     | '__root__'
     | '/'
-    | '/_app'
+    | '/brand'
+    | '/calendar'
+    | '/campaigns'
+    | '/dashboard'
     | '/onboarding'
-    | '/_app/brand'
-    | '/_app/calendar'
-    | '/_app/campaigns'
-    | '/_app/dashboard'
-    | '/_app/settings'
-    | '/_app/campaigns/new'
+    | '/settings'
+    | '/campaigns/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRouteWithChildren
+  BrandRoute: typeof BrandRoute
+  CalendarRoute: typeof CalendarRoute
+  CampaignsRoute: typeof CampaignsRouteWithChildren
+  DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/onboarding': {
       id: '/onboarding'
       path: '/onboarding'
@@ -145,11 +149,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AppRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/campaigns': {
+      id: '/campaigns'
+      path: '/campaigns'
+      fullPath: '/campaigns'
+      preLoaderRoute: typeof CampaignsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/brand': {
+      id: '/brand'
+      path: '/brand'
+      fullPath: '/brand'
+      preLoaderRoute: typeof BrandRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -159,86 +184,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/campaigns': {
-      id: '/_app/campaigns'
-      path: '/campaigns'
-      fullPath: '/campaigns'
-      preLoaderRoute: typeof AppCampaignsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/calendar': {
-      id: '/_app/calendar'
-      path: '/calendar'
-      fullPath: '/calendar'
-      preLoaderRoute: typeof AppCalendarRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/brand': {
-      id: '/_app/brand'
-      path: '/brand'
-      fullPath: '/brand'
-      preLoaderRoute: typeof AppBrandRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/campaigns/new': {
-      id: '/_app/campaigns/new'
+    '/campaigns/new': {
+      id: '/campaigns/new'
       path: '/new'
       fullPath: '/campaigns/new'
-      preLoaderRoute: typeof AppCampaignsNewRouteImport
-      parentRoute: typeof AppCampaignsRoute
+      preLoaderRoute: typeof CampaignsNewRouteImport
+      parentRoute: typeof CampaignsRoute
     }
   }
 }
 
-interface AppCampaignsRouteChildren {
-  AppCampaignsNewRoute: typeof AppCampaignsNewRoute
+interface CampaignsRouteChildren {
+  CampaignsNewRoute: typeof CampaignsNewRoute
 }
 
-const AppCampaignsRouteChildren: AppCampaignsRouteChildren = {
-  AppCampaignsNewRoute: AppCampaignsNewRoute,
+const CampaignsRouteChildren: CampaignsRouteChildren = {
+  CampaignsNewRoute: CampaignsNewRoute,
 }
 
-const AppCampaignsRouteWithChildren = AppCampaignsRoute._addFileChildren(
-  AppCampaignsRouteChildren,
+const CampaignsRouteWithChildren = CampaignsRoute._addFileChildren(
+  CampaignsRouteChildren,
 )
-
-interface AppRouteChildren {
-  AppBrandRoute: typeof AppBrandRoute
-  AppCalendarRoute: typeof AppCalendarRoute
-  AppCampaignsRoute: typeof AppCampaignsRouteWithChildren
-  AppDashboardRoute: typeof AppDashboardRoute
-  AppSettingsRoute: typeof AppSettingsRoute
-}
-
-const AppRouteChildren: AppRouteChildren = {
-  AppBrandRoute: AppBrandRoute,
-  AppCalendarRoute: AppCalendarRoute,
-  AppCampaignsRoute: AppCampaignsRouteWithChildren,
-  AppDashboardRoute: AppDashboardRoute,
-  AppSettingsRoute: AppSettingsRoute,
-}
-
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRouteWithChildren,
+  BrandRoute: BrandRoute,
+  CalendarRoute: CalendarRoute,
+  CampaignsRoute: CampaignsRouteWithChildren,
+  DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useWorkspace, ORG_TYPE_LABEL, TONE_LABEL, TONE_HELP, type OrgType, type Tone, type Connections } from "@/lib/workspace-context";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_app/settings")({
+export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "Settings · Autopilot" }] }),
   component: Settings,
 });
