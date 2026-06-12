@@ -18,7 +18,7 @@ import { useWorkspace, BACKGROUND_PRESETS, POST_ROLE_LABEL, type ScheduledPost }
 import { buildPosts, formatDate, makeCampaign, PRESETS } from "@/lib/campaign-helpers";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/campaigns/new")({
+export const Route = createFileRoute("/campaigns_/new")({
   head: () => ({ meta: [{ title: "New Campaign · Autopilot" }] }),
   component: NewCampaign,
 });
