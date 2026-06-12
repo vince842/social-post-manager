@@ -106,7 +106,7 @@ export function makeCampaign(args: {
     eventDate: args.eventDate.toISOString(),
     createdAt: new Date().toISOString(),
     status: "scheduled",
-    posts: buildPosts(args),
+    posts: buildPosts({ ...args, campaignName: args.name }),
   };
 }
 
