@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useWorkspace, ORG_TYPE_LABEL, TONE_LABEL } from "@/lib/workspace-context";
+import { AppShell } from "@/components/app-shell";
 
 export const Route = createFileRoute("/brand")({
   head: () => ({ meta: [{ title: "Brand Assets · Autopilot" }] }),
@@ -14,7 +15,8 @@ function Brand() {
   const org = state.organization;
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6">
+    <AppShell>
+      <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Brand Assets</h1>
@@ -53,7 +55,8 @@ function Brand() {
           </CardContent>
         </Card>
       </div>
-    </div>
+      </div>
+    </AppShell>
   );
 }
 

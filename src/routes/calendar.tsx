@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useWorkspace, POST_ROLE_LABEL } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
 import { cn } from "@/lib/utils";
+import { AppShell } from "@/components/app-shell";
 
 export const Route = createFileRoute("/calendar")({
   head: () => ({ meta: [{ title: "Calendar · Autopilot" }] }),
@@ -36,7 +37,8 @@ function CalendarPage() {
   const selectedPosts = selected ? posts.filter((p) => new Date(p.date).toDateString() === selected) : [];
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <AppShell>
+      <div className="mx-auto max-w-5xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Calendar</h1>
         <p className="text-sm text-muted-foreground">A bird's-eye view of every scheduled post.</p>
@@ -106,6 +108,7 @@ function CalendarPage() {
           </CardContent>
         </Card>
       )}
-    </div>
+      </div>
+    </AppShell>
   );
 }

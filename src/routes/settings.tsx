@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useWorkspace, ORG_TYPE_LABEL, TONE_LABEL, TONE_HELP, type OrgType, type Tone, type Connections } from "@/lib/workspace-context";
 import { toast } from "sonner";
+import { AppShell } from "@/components/app-shell";
 
 export const Route = createFileRoute("/settings")({
   head: () => ({ meta: [{ title: "Settings · Autopilot" }] }),
@@ -27,7 +28,8 @@ function Settings() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6">
+    <AppShell>
+      <div className="mx-auto max-w-3xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Settings</h1>
         <p className="text-sm text-muted-foreground">Manage your organization, brand, and connections.</p>
@@ -95,7 +97,8 @@ function Settings() {
       <div className="flex justify-end">
         <Button onClick={() => toast.success("Saved")}>Save changes</Button>
       </div>
-    </div>
+      </div>
+    </AppShell>
   );
 }
 
