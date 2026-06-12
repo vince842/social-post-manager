@@ -137,6 +137,7 @@ function hslHex(h: number, s: number, l: number): string {
 
 export const PRESETS: { label: string; name: string; description: string }[] = [
   { label: "Weekly Match Update", name: "Weekly Match Update", description: "Round-up of this week's match — score, highlights, and player of the match." },
+  { label: "Weekly Game Reminder", name: "Weekly Game Reminder", description: "Reminder about this week's game — opponent, venue, time, and call to come cheer on the team." },
   { label: "Sausage Sizzle Fundraiser", name: "Sausage Sizzle Fundraiser", description: "Community sausage sizzle to raise funds for our club. Snags, drinks, and good vibes." },
   { label: "End of Season Sale", name: "End of Season Sale", description: "Big end-of-season sale — up to 40% off select items. Limited stock available." },
   { label: "Volunteer Call-Out", name: "Volunteer Call-Out", description: "We're looking for volunteers to help out at our upcoming event. Every hour counts!" },
