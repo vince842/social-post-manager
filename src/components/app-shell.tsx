@@ -1,16 +1,21 @@
-import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { Sparkles, LayoutDashboard, Megaphone, Palette, Calendar, Settings as SettingsIcon } from "lucide-react";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { useEffect, type ReactNode } from "react";
+import { Calendar, LayoutDashboard, Megaphone, Palette, Settings as SettingsIcon, Sparkles } from "lucide-react";
 import {
-  Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarProvider, SidebarTrigger, SidebarHeader,
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useWorkspace } from "@/lib/workspace-context";
-
-export const Route = createFileRoute("/_app")({
-  component: AppLayout,
-});
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -20,7 +25,7 @@ const NAV = [
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
 
-function AppLayout() {
+export function AppShell({ children }: { children: ReactNode }) {
   const { state } = useWorkspace();
   const navigate = useNavigate();
 
@@ -54,9 +59,7 @@ function AppLayout() {
               <Link to="/campaigns/new"><Sparkles className="mr-1 h-4 w-4" /> Create Campaign</Link>
             </Button>
           </header>
-          <main className="flex-1 p-4 sm:p-6 lg:p-8">
-            <Outlet />
-          </main>
+          <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
         </div>
       </div>
     </SidebarProvider>

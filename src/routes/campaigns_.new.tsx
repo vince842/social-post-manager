@@ -17,8 +17,9 @@ import { cn } from "@/lib/utils";
 import { useWorkspace, BACKGROUND_PRESETS, POST_ROLE_LABEL, type ScheduledPost } from "@/lib/workspace-context";
 import { buildPosts, formatDate, makeCampaign, PRESETS } from "@/lib/campaign-helpers";
 import { toast } from "sonner";
+import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/_app/campaigns/new")({
+export const Route = createFileRoute("/campaigns_/new")({
   head: () => ({ meta: [{ title: "New Campaign · Autopilot" }] }),
   component: NewCampaign,
 });
@@ -67,7 +68,8 @@ function NewCampaign() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
+    <AppShell>
+      <div className="mx-auto max-w-5xl space-y-6">
       <div>
         <div className="mb-2 flex items-center justify-between text-xs font-medium text-muted-foreground">
           <span>Step {step} of 4 — {STEPS[step - 1]}</span>
@@ -235,7 +237,8 @@ function NewCampaign() {
           )}
         </SheetContent>
       </Sheet>
-    </div>
+      </div>
+    </AppShell>
   );
 }
 
