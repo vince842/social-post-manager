@@ -80,6 +80,8 @@ type Action =
   | { type: "TOGGLE_CONNECTION"; key: keyof Connections; value: boolean }
   | { type: "ADD_CAMPAIGN"; campaign: Campaign }
   | { type: "UPDATE_CAMPAIGN"; id: string; patch: Partial<Campaign> }
+  | { type: "ADD_TEMPLATE"; template: Template }
+  | { type: "REMOVE_TEMPLATE"; id: string }
   | { type: "RESET" };
 
 function reducer(state: WorkspaceState, action: Action): WorkspaceState {
@@ -91,6 +93,7 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
         organization: { ...defaultState.organization, ...(action.state?.organization ?? {}) },
         connections: { ...defaultState.connections, ...(action.state?.connections ?? {}) },
         campaigns: Array.isArray(action.state?.campaigns) ? action.state.campaigns : [],
+        templates: Array.isArray(action.state?.templates) ? action.state.templates : [],
       };
     case "UPDATE_ORG":
       return { ...state, organization: { ...state.organization, ...action.patch } };
@@ -104,6 +107,17 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
       return {
         ...state,
         campaigns: state.campaigns.map((c) => (c.id === action.id ? { ...c, ...action.patch } : c)),
+      };
+    case "ADD_TEMPLATE":
+      return { ...state, templates: [action.template, ...state.templates] };
+    case "REMOVE_TEMPLATE":
+      return {
+        ...state,
+        templates: state.templates.filter((t) => t.id !== action.id),
+        campaigns: state.campaigns.map((c) => ({
+          ...c,
+          posts: c.posts.map((p) => (p.templateId === action.id ? { ...p, templateId: undefined } : p)),
+        })),
       };
     case "RESET":
       return defaultState;
