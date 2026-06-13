@@ -16,6 +16,7 @@ export function PostCardVisual({ post, size = "md", className }: PostCardProps) 
     [post.background]
   );
   const template = post.templateId ? state.templates.find((t) => t.id === post.templateId) : undefined;
+  const brandImage = post.imageId ? state.brandImages.find((b) => b.id === post.imageId) : undefined;
 
   return (
     <div
@@ -25,10 +26,18 @@ export function PostCardVisual({ post, size = "md", className }: PostCardProps) 
       {template && (
         <img src={template.dataUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
       )}
+      {brandImage && (
+        <img
+          src={brandImage.dataUrl}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover mix-blend-overlay opacity-90"
+        />
+      )}
       <div
         className="absolute inset-0"
-        style={{ background: `linear-gradient(180deg, transparent 0%, ${state.organization.primaryColor}99 100%)` }}
+        style={{ background: `linear-gradient(180deg, ${state.organization.primaryColor}33 0%, ${state.organization.primaryColor}AA 100%)` }}
       />
+
       <div className="relative flex h-full flex-col justify-between">
         <div className="flex items-center gap-2">
           <div
