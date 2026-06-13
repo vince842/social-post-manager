@@ -29,6 +29,7 @@ export interface ScheduledPost {
   caption: string;
   background: string; // gradient key
   templateId?: string; // optional brand template image
+  imageId?: string; // optional brand photo blended on top
   enabled: boolean;
 }
 
@@ -49,13 +50,23 @@ export interface Template {
   createdAt: string;
 }
 
+export interface BrandImage {
+  id: string;
+  name: string;
+  dataUrl: string;
+  tags: string[];
+  createdAt: string;
+}
+
 export interface WorkspaceState {
   onboarded: boolean;
   organization: Organization;
   connections: Connections;
   campaigns: Campaign[];
   templates: Template[];
+  brandImages: BrandImage[];
 }
+
 
 const defaultState: WorkspaceState = {
   onboarded: false,
