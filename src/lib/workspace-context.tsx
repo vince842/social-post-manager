@@ -70,6 +70,7 @@ const defaultState: WorkspaceState = {
   },
   connections: { facebook: false, instagram: false, linkedin: false },
   campaigns: [],
+  templates: [],
 };
 
 type Action =
