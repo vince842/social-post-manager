@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { useWorkspace } from "@/lib/workspace-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -13,12 +12,11 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { state } = useWorkspace();
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate({ to: state.onboarded ? "/dashboard" : "/onboarding", replace: true });
-  }, [state.onboarded, navigate]);
+    navigate({ to: "/dashboard", replace: true });
+  }, [navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
