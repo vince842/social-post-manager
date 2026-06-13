@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { format, parseISO } from "date-fns";
-import { ArrowLeft, Calendar as CalIcon, Save, Trash2, Rocket } from "lucide-react";
+import { ArrowLeft, Calendar as CalIcon, Save, Trash2, Rocket, Upload, ImageOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,10 +12,12 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useWorkspace, BACKGROUND_PRESETS, POST_ROLE_LABEL, type ScheduledPost } from "@/lib/workspace-context";
+import { useWorkspace, BACKGROUND_PRESETS, POST_ROLE_LABEL, type ScheduledPost, type BrandImage } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
 import { AppShell } from "@/components/app-shell";
+import { fileToSquareDataUrl } from "@/lib/image-resize";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/campaigns_/$id")({
   head: () => ({ meta: [{ title: "Edit Campaign · Autopilot" }] }),
