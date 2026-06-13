@@ -28,6 +28,7 @@ export interface ScheduledPost {
   header: string;
   caption: string;
   background: string; // gradient key
+  templateId?: string; // optional brand template image
   enabled: boolean;
 }
 
@@ -41,11 +42,19 @@ export interface Campaign {
   posts: ScheduledPost[];
 }
 
+export interface Template {
+  id: string;
+  name: string;
+  dataUrl: string; // cropped/sized to 3:2
+  createdAt: string;
+}
+
 export interface WorkspaceState {
   onboarded: boolean;
   organization: Organization;
   connections: Connections;
   campaigns: Campaign[];
+  templates: Template[];
 }
 
 const defaultState: WorkspaceState = {
