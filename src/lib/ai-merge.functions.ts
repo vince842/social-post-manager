@@ -33,7 +33,10 @@ async function generateOne(apiKey: string, prompt: string, images: string[]): Pr
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`AI gateway ${res.status}: ${text.slice(0, 200)}`);
+    console.error("AI gateway error", res.status, text);
+    if (res.status === 429) throw new Error("Rate limit reached. Please try again shortly.");
+    if (res.status === 402) throw new Error("AI credits exhausted. Please try again later.");
+    throw new Error("Image generation failed. Please try again.");
   }
   const json = (await res.json()) as { data?: Array<{ b64_json?: string }> };
   const b64 = json.data?.[0]?.b64_json;
