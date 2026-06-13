@@ -89,126 +89,130 @@ function Onboarding() {
     </div>
   );
 
-  function StepOrg() {
-    return (
-      <div className="space-y-5">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Tell us about your organization</h2>
-          <p className="mt-1 text-sm text-muted-foreground">A few details so we can tailor every campaign to your voice.</p>
-        </div>
+}
 
-        <div className="space-y-2">
-          <Label htmlFor="org-name">Organization name</Label>
-          <Input
-            id="org-name"
-            placeholder="e.g. Westside Football Club"
-            value={state.organization.name}
-            onChange={(e) => updateOrg({ name: e.target.value })}
-          />
-        </div>
+type Organization = ReturnType<typeof useWorkspace>["state"]["organization"];
+type UpdateOrg = ReturnType<typeof useWorkspace>["updateOrg"];
 
-        <div className="space-y-2">
-          <Label>What kind of organization?</Label>
-          <Select value={state.organization.type} onValueChange={(v) => updateOrg({ type: v as OrgType })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {(Object.keys(ORG_TYPE_LABEL) as OrgType[]).map((k) => (
-                <SelectItem key={k} value={k}>{ORG_TYPE_LABEL[k]}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <Label>Tone of voice</Label>
-          <Select value={state.organization.tone} onValueChange={(v) => updateOrg({ tone: v as Tone })}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>
-              {(Object.keys(TONE_LABEL) as Tone[]).map((k) => (
-                <SelectItem key={k} value={k}>{TONE_LABEL[k]}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <p className="text-xs text-muted-foreground">{TONE_HELP[state.organization.tone]} You can change this anytime.</p>
-        </div>
+function StepOrg({ organization, updateOrg }: { organization: Organization; updateOrg: UpdateOrg }) {
+  return (
+    <div className="space-y-5">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">Tell us about your organization</h2>
+        <p className="mt-1 text-sm text-muted-foreground">A few details so we can tailor every campaign to your voice.</p>
       </div>
-    );
-  }
 
-  function StepBrand() {
-    const fileRef = useRef<HTMLInputElement>(null);
-    const [refUrl, setRefUrl] = useState(state.organization.referenceUrl);
-    const [pulling, setPulling] = useState(false);
+      <div className="space-y-2">
+        <Label htmlFor="org-name">Organization name</Label>
+        <Input
+          id="org-name"
+          placeholder="e.g. Westside Football Club"
+          value={organization.name}
+          onChange={(e) => updateOrg({ name: e.target.value })}
+        />
+      </div>
 
-    const pull = () => {
-      if (!refUrl.trim()) return;
-      setPulling(true);
-      setTimeout(() => {
-        const { primary, secondary } = paletteFromUrl(refUrl);
-        updateOrg({ primaryColor: primary, secondaryColor: secondary, referenceUrl: refUrl });
-        setPulling(false);
-        toast.success("Starter palette pulled", { description: "Tweak the colors below to taste." });
-      }, 700);
-    };
+      <div className="space-y-2">
+        <Label>What kind of organization?</Label>
+        <Select value={organization.type} onValueChange={(v) => updateOrg({ type: v as OrgType })}>
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {(Object.keys(ORG_TYPE_LABEL) as OrgType[]).map((k) => (
+              <SelectItem key={k} value={k}>{ORG_TYPE_LABEL[k]}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
-    const onFile = (file: File | undefined) => {
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => updateOrg({ logoDataUrl: reader.result as string });
-      reader.readAsDataURL(file);
-    };
+      <div className="space-y-2">
+        <Label>Tone of voice</Label>
+        <Select value={organization.tone} onValueChange={(v) => updateOrg({ tone: v as Tone })}>
+          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectContent>
+            {(Object.keys(TONE_LABEL) as Tone[]).map((k) => (
+              <SelectItem key={k} value={k}>{TONE_LABEL[k]}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <p className="text-xs text-muted-foreground">{TONE_HELP[organization.tone]} You can change this anytime.</p>
+      </div>
+    </div>
+  );
+}
 
-    return (
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight">Make it look like you</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Your colors and logo carry through every post we generate.</p>
+function StepBrand({ organization, updateOrg }: { organization: Organization; updateOrg: UpdateOrg }) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [refUrl, setRefUrl] = useState(organization.referenceUrl);
+  const [pulling, setPulling] = useState(false);
+
+  const pull = () => {
+    if (!refUrl.trim()) return;
+    setPulling(true);
+    setTimeout(() => {
+      const { primary, secondary } = paletteFromUrl(refUrl);
+      updateOrg({ primaryColor: primary, secondaryColor: secondary, referenceUrl: refUrl });
+      setPulling(false);
+      toast.success("Starter palette pulled", { description: "Tweak the colors below to taste." });
+    }, 700);
+  };
+
+  const onFile = (file: File | undefined) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => updateOrg({ logoDataUrl: reader.result as string });
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold tracking-tight">Make it look like you</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Your colors and logo carry through every post we generate.</p>
+      </div>
+
+      <div className="rounded-xl border bg-muted/30 p-4">
+        <Label className="flex items-center gap-2 text-sm"><Globe className="h-4 w-4" /> Have a website? Pull a starter palette</Label>
+        <div className="mt-2 flex gap-2">
+          <Input placeholder="https://yourclub.com" value={refUrl} onChange={(e) => setRefUrl(e.target.value)} />
+          <Button type="button" variant="secondary" onClick={pull} disabled={pulling || !refUrl.trim()}>
+            {pulling ? <Loader2 className="h-4 w-4 animate-spin" /> : "Pull colors"}
+          </Button>
         </div>
+        <p className="mt-2 text-xs text-muted-foreground">We'll suggest a palette — you can fine-tune below.</p>
+      </div>
 
-        <div className="rounded-xl border bg-muted/30 p-4">
-          <Label className="flex items-center gap-2 text-sm"><Globe className="h-4 w-4" /> Have a website? Pull a starter palette</Label>
-          <div className="mt-2 flex gap-2">
-            <Input placeholder="https://yourclub.com" value={refUrl} onChange={(e) => setRefUrl(e.target.value)} />
-            <Button type="button" variant="secondary" onClick={pull} disabled={pulling || !refUrl.trim()}>
-              {pulling ? <Loader2 className="h-4 w-4 animate-spin" /> : "Pull colors"}
-            </Button>
-          </div>
-          <p className="mt-2 text-xs text-muted-foreground">We'll suggest a palette — you can fine-tune below.</p>
-        </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <ColorField label="Primary color" value={organization.primaryColor} onChange={(v) => updateOrg({ primaryColor: v })} />
+        <ColorField label="Secondary color" value={organization.secondaryColor} onChange={(v) => updateOrg({ secondaryColor: v })} />
+      </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <ColorField label="Primary color" value={state.organization.primaryColor} onChange={(v) => updateOrg({ primaryColor: v })} />
-          <ColorField label="Secondary color" value={state.organization.secondaryColor} onChange={(v) => updateOrg({ secondaryColor: v })} />
-        </div>
-
-        <div className="space-y-2">
-          <Label>Organization logo</Label>
+      <div className="space-y-2">
+        <Label>Organization logo</Label>
+        <div
+          className="flex cursor-pointer items-center gap-4 rounded-xl border border-dashed bg-muted/30 p-4 transition hover:bg-muted/50"
+          onClick={() => fileRef.current?.click()}
+        >
           <div
-            className="flex cursor-pointer items-center gap-4 rounded-xl border border-dashed bg-muted/30 p-4 transition hover:bg-muted/50"
-            onClick={() => fileRef.current?.click()}
+            className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl"
+            style={{ background: `linear-gradient(135deg, ${organization.primaryColor}, ${organization.secondaryColor})` }}
           >
-            <div
-              className="grid h-16 w-16 shrink-0 place-items-center overflow-hidden rounded-xl"
-              style={{ background: `linear-gradient(135deg, ${state.organization.primaryColor}, ${state.organization.secondaryColor})` }}
-            >
-              {state.organization.logoDataUrl ? (
-                <img src={state.organization.logoDataUrl} alt="Logo" className="h-full w-full object-cover" />
-              ) : (
-                <span className="text-lg font-bold text-white">
-                  {(state.organization.name || "?").slice(0, 2).toUpperCase()}
-                </span>
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-2 text-sm font-medium"><Upload className="h-4 w-4" /> {state.organization.logoDataUrl ? "Replace logo" : "Upload logo"}</div>
-              <p className="text-xs text-muted-foreground">PNG, JPG, or SVG. Optional — we'll use your initials otherwise.</p>
-            </div>
-            <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
+            {organization.logoDataUrl ? (
+              <img src={organization.logoDataUrl} alt="Logo" className="h-full w-full object-cover" />
+            ) : (
+              <span className="text-lg font-bold text-white">
+                {(organization.name || "?").slice(0, 2).toUpperCase()}
+              </span>
+            )}
           </div>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-2 text-sm font-medium"><Upload className="h-4 w-4" /> {organization.logoDataUrl ? "Replace logo" : "Upload logo"}</div>
+            <p className="text-xs text-muted-foreground">PNG, JPG, or SVG. Optional — we'll use your initials otherwise.</p>
+          </div>
+          <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} />
         </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 function ColorField({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
