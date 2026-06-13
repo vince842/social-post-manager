@@ -29,6 +29,7 @@ export interface ScheduledPost {
   caption: string;
   background: string; // gradient key
   templateId?: string; // optional brand template image
+  imageId?: string; // optional brand photo blended on top
   enabled: boolean;
 }
 
@@ -49,13 +50,23 @@ export interface Template {
   createdAt: string;
 }
 
+export interface BrandImage {
+  id: string;
+  name: string;
+  dataUrl: string;
+  tags: string[];
+  createdAt: string;
+}
+
 export interface WorkspaceState {
   onboarded: boolean;
   organization: Organization;
   connections: Connections;
   campaigns: Campaign[];
   templates: Template[];
+  brandImages: BrandImage[];
 }
+
 
 const defaultState: WorkspaceState = {
   onboarded: false,
@@ -71,7 +82,9 @@ const defaultState: WorkspaceState = {
   connections: { facebook: false, instagram: false, linkedin: false },
   campaigns: [],
   templates: [],
+  brandImages: [],
 };
+
 
 type Action =
   | { type: "HYDRATE"; state: WorkspaceState }
@@ -82,6 +95,9 @@ type Action =
   | { type: "UPDATE_CAMPAIGN"; id: string; patch: Partial<Campaign> }
   | { type: "ADD_TEMPLATE"; template: Template }
   | { type: "REMOVE_TEMPLATE"; id: string }
+  | { type: "ADD_BRAND_IMAGE"; image: BrandImage }
+  | { type: "UPDATE_BRAND_IMAGE"; id: string; patch: Partial<BrandImage> }
+  | { type: "REMOVE_BRAND_IMAGE"; id: string }
   | { type: "RESET" };
 
 function reducer(state: WorkspaceState, action: Action): WorkspaceState {
@@ -94,6 +110,7 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
         connections: { ...defaultState.connections, ...(action.state?.connections ?? {}) },
         campaigns: Array.isArray(action.state?.campaigns) ? action.state.campaigns : [],
         templates: Array.isArray(action.state?.templates) ? action.state.templates : [],
+        brandImages: Array.isArray(action.state?.brandImages) ? action.state.brandImages : [],
       };
     case "UPDATE_ORG":
       return { ...state, organization: { ...state.organization, ...action.patch } };
@@ -119,12 +136,29 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
           posts: c.posts.map((p) => (p.templateId === action.id ? { ...p, templateId: undefined } : p)),
         })),
       };
+    case "ADD_BRAND_IMAGE":
+      return { ...state, brandImages: [action.image, ...state.brandImages] };
+    case "UPDATE_BRAND_IMAGE":
+      return {
+        ...state,
+        brandImages: state.brandImages.map((b) => (b.id === action.id ? { ...b, ...action.patch } : b)),
+      };
+    case "REMOVE_BRAND_IMAGE":
+      return {
+        ...state,
+        brandImages: state.brandImages.filter((b) => b.id !== action.id),
+        campaigns: state.campaigns.map((c) => ({
+          ...c,
+          posts: c.posts.map((p) => (p.imageId === action.id ? { ...p, imageId: undefined } : p)),
+        })),
+      };
     case "RESET":
       return defaultState;
     default:
       return state;
   }
 }
+
 
 const STORAGE_KEY = "autopilot.workspace.v1";
 
@@ -137,8 +171,12 @@ interface Ctx {
   updateCampaign: (id: string, patch: Partial<Campaign>) => void;
   addTemplate: (t: Template) => void;
   removeTemplate: (id: string) => void;
+  addBrandImage: (img: BrandImage) => void;
+  updateBrandImage: (id: string, patch: Partial<BrandImage>) => void;
+  removeBrandImage: (id: string) => void;
   reset: () => void;
 }
+
 
 const WorkspaceContext = createContext<Ctx | null>(null);
 
@@ -173,7 +211,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     updateCampaign: (id, patch) => dispatch({ type: "UPDATE_CAMPAIGN", id, patch }),
     addTemplate: (template) => dispatch({ type: "ADD_TEMPLATE", template }),
     removeTemplate: (id) => dispatch({ type: "REMOVE_TEMPLATE", id }),
+    addBrandImage: (image) => dispatch({ type: "ADD_BRAND_IMAGE", image }),
+    updateBrandImage: (id, patch) => dispatch({ type: "UPDATE_BRAND_IMAGE", id, patch }),
+    removeBrandImage: (id) => dispatch({ type: "REMOVE_BRAND_IMAGE", id }),
     reset: () => dispatch({ type: "RESET" }),
+
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;

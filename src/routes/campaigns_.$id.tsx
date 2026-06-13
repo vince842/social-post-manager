@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { format, parseISO } from "date-fns";
-import { ArrowLeft, Calendar as CalIcon, Save, Trash2, Rocket } from "lucide-react";
+import { ArrowLeft, Calendar as CalIcon, Save, Trash2, Rocket, Upload, ImageOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,10 +12,12 @@ import { Badge } from "@/components/ui/badge";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { useWorkspace, BACKGROUND_PRESETS, POST_ROLE_LABEL, type ScheduledPost } from "@/lib/workspace-context";
+import { useWorkspace, BACKGROUND_PRESETS, POST_ROLE_LABEL, type ScheduledPost, type BrandImage } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
 import { AppShell } from "@/components/app-shell";
+import { fileToSquareDataUrl } from "@/lib/image-resize";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/campaigns_/$id")({
   head: () => ({ meta: [{ title: "Edit Campaign · Autopilot" }] }),
@@ -24,7 +26,8 @@ export const Route = createFileRoute("/campaigns_/$id")({
 
 function EditCampaign() {
   const { id } = Route.useParams();
-  const { state, updateCampaign } = useWorkspace();
+  const { state, updateCampaign, addBrandImage } = useWorkspace();
+
   const navigate = useNavigate();
   const campaign = state.campaigns.find((c) => c.id === id);
 
@@ -174,7 +177,15 @@ function EditCampaign() {
                     </div>
                   </div>
                 )}
+
+                <BrandImagePicker
+                  brandImages={state.brandImages}
+                  selectedId={p.imageId}
+                  onSelect={(imageId) => updatePost(p.id, { imageId })}
+                  onUpload={addBrandImage}
+                />
               </CardContent>
+
             </Card>
           ))}
         </div>
@@ -211,3 +222,138 @@ function EditCampaign() {
     </AppShell>
   );
 }
+
+function BrandImagePicker({
+  brandImages,
+  selectedId,
+  onSelect,
+  onUpload,
+}: {
+  brandImages: BrandImage[];
+  selectedId: string | undefined;
+  onSelect: (id: string | undefined) => void;
+  onUpload: (img: BrandImage) => void;
+}) {
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [pendingTags, setPendingTags] = useState("");
+  const [filter, setFilter] = useState<string>("");
+
+  const allTags = Array.from(new Set(brandImages.flatMap((i) => i.tags))).sort();
+  const visible = filter ? brandImages.filter((i) => i.tags.includes(filter)) : brandImages;
+
+  const handleFiles = async (files: FileList | null) => {
+    if (!files || files.length === 0) return;
+    const tags = pendingTags.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean);
+    setBusy(true);
+    try {
+      const file = files[0];
+      if (!file.type.startsWith("image/")) {
+        toast.error("That's not an image");
+        return;
+      }
+      const dataUrl = await fileToSquareDataUrl(file);
+      const img: BrandImage = {
+        id: crypto.randomUUID(),
+        name: file.name.replace(/\.[^.]+$/, "").slice(0, 40) || "Photo",
+        dataUrl,
+        tags,
+        createdAt: new Date().toISOString(),
+      };
+      onUpload(img);
+      onSelect(img.id);
+      toast.success("Added to your brand image folder");
+      setPendingTags("");
+    } catch (e) {
+      console.error(e);
+      toast.error("Couldn't process that image");
+    } finally {
+      setBusy(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="space-y-2 rounded-xl border bg-muted/30 p-3">
+      <div className="flex items-center justify-between gap-2">
+        <Label className="m-0">Blend in a brand photo</Label>
+        {selectedId && (
+          <Button type="button" size="sm" variant="ghost" onClick={() => onSelect(undefined)}>
+            <ImageOff className="mr-1 h-3 w-3" /> Remove photo
+          </Button>
+        )}
+      </div>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <Input
+          placeholder="Tags for the upload (comma-separated)"
+          value={pendingTags}
+          onChange={(e) => setPendingTags(e.target.value)}
+          className="flex-1"
+        />
+        <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => fileRef.current?.click()}>
+          <Upload className="mr-1 h-3 w-3" /> {busy ? "Uploading…" : "Upload photo"}
+        </Button>
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => handleFiles(e.target.files)}
+        />
+      </div>
+
+      {brandImages.length === 0 ? (
+        <p className="text-xs text-muted-foreground">
+          No brand photos yet — upload one above. It will be saved to your brand image folder for reuse.
+        </p>
+      ) : (
+        <>
+          {allTags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              <button
+                type="button"
+                onClick={() => setFilter("")}
+                className={cn(
+                  "rounded-full border px-2 py-0.5 text-[11px]",
+                  !filter ? "bg-foreground text-background" : "bg-background"
+                )}
+              >
+                All
+              </button>
+              {allTags.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setFilter(filter === t ? "" : t)}
+                  className={cn(
+                    "rounded-full border px-2 py-0.5 text-[11px]",
+                    filter === t ? "bg-foreground text-background" : "bg-background"
+                  )}
+                >
+                  #{t}
+                </button>
+              ))}
+            </div>
+          )}
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+            {visible.map((img) => (
+              <button
+                key={img.id}
+                type="button"
+                onClick={() => onSelect(img.id === selectedId ? undefined : img.id)}
+                className={cn(
+                  "overflow-hidden rounded-lg border-2 transition",
+                  selectedId === img.id ? "border-foreground ring-2 ring-ring" : "border-transparent"
+                )}
+                title={img.tags.length ? `#${img.tags.join(" #")}` : img.name}
+              >
+                <img src={img.dataUrl} alt={img.name} className="aspect-square w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
