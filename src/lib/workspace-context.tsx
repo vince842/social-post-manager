@@ -135,6 +135,8 @@ interface Ctx {
   toggleConnection: (key: keyof Connections, value: boolean) => void;
   addCampaign: (c: Campaign) => void;
   updateCampaign: (id: string, patch: Partial<Campaign>) => void;
+  addTemplate: (t: Template) => void;
+  removeTemplate: (id: string) => void;
   reset: () => void;
 }
 
