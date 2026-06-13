@@ -30,6 +30,23 @@ export async function fileTo3x2DataUrl(file: File, width = 1200): Promise<string
   return canvas.toDataURL("image/jpeg", 0.85);
 }
 
+// Convert a File into a square (1:1) JPEG data URL by center-cover cropping.
+export async function fileToSquareDataUrl(file: File, size = 1080): Promise<string> {
+  const bitmap = await loadImage(file);
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas 2D not supported");
+  const side = Math.min(bitmap.width, bitmap.height);
+  const sx = (bitmap.width - side) / 2;
+  const sy = (bitmap.height - side) / 2;
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0, 0, size, size);
+  ctx.drawImage(bitmap, sx, sy, side, side, 0, 0, size, size);
+  return canvas.toDataURL("image/jpeg", 0.85);
+}
+
 function loadImage(file: File): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const url = URL.createObjectURL(file);
