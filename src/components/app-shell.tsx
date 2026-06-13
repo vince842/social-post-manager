@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { Calendar, LayoutDashboard, Megaphone, Palette, Settings as SettingsIcon, Sparkles } from "lucide-react";
+import { Calendar, LayoutDashboard, Megaphone, Palette, Settings as SettingsIcon, Sparkles, Zap } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
