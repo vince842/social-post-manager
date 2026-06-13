@@ -1,5 +1,5 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { type ReactNode } from "react";
 import { Calendar, LayoutDashboard, Megaphone, Palette, Settings as SettingsIcon, Sparkles, Zap } from "lucide-react";
 import {
   Sidebar,
@@ -19,6 +19,7 @@ import { useWorkspace } from "@/lib/workspace-context";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/onboarding", label: "Onboarding", icon: SettingsIcon },
   { to: "/campaigns/new", label: "Autopilot", icon: Zap },
   { to: "/campaigns", label: "Campaigns", icon: Megaphone },
   { to: "/brand", label: "Brand Assets", icon: Palette },
@@ -28,13 +29,6 @@ const NAV = [
 
 export function AppShell({ children }: { children: ReactNode }) {
   const { state } = useWorkspace();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!state.onboarded) navigate({ to: "/onboarding", replace: true });
-  }, [state.onboarded, navigate]);
-
-  if (!state.onboarded) return null;
 
   return (
     <SidebarProvider>
