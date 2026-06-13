@@ -119,6 +119,21 @@ function EditCampaign() {
                   </div>
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor={`dt-${p.id}`}>Date &amp; time</Label>
+                  <Input
+                    id={`dt-${p.id}`}
+                    type="datetime-local"
+                    value={format(parseISO(p.date), "yyyy-MM-dd'T'HH:mm")}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (!v) return;
+                      const d = new Date(v);
+                      if (!isNaN(d.getTime())) updatePost(p.id, { date: d.toISOString() });
+                    }}
+                    className="sm:w-72"
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label>Header</Label>
                   <Input value={p.header} onChange={(e) => updatePost(p.id, { header: e.target.value })} />
                 </div>
