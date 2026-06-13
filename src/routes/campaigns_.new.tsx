@@ -52,7 +52,12 @@ function NewCampaign() {
         eventDate,
         organization: state.organization,
       });
-      setPosts(built);
+      const firstTemplate = state.templates[0];
+      const defaultBg = firstTemplate ? built[0].background : BACKGROUND_PRESETS[0].key;
+      const defaultTemplateId = firstTemplate ? firstTemplate.id : undefined;
+      setPosts(built.map((p) => ({ ...p, background: defaultBg, templateId: defaultTemplateId })));
+      setCampaignBg(defaultBg);
+      setCampaignTemplateId(defaultTemplateId);
     }
     setStep((s) => Math.min(4, s + 1));
   };
@@ -153,6 +158,52 @@ function NewCampaign() {
             <div>
               <h2 className="text-2xl font-bold">Tweak your posts</h2>
               <p className="text-sm text-muted-foreground">Tap any card to edit the header, caption, or background. Your brand is already baked in.</p>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <h3 className="text-sm font-semibold">Campaign visual style</h3>
+                <p className="text-xs text-muted-foreground">Choose a default look for all posts. You can still tweak individual posts below.</p>
+              </div>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {BACKGROUND_PRESETS.map((bg) => (
+                  <button
+                    key={bg.key}
+                    type="button"
+                    onClick={() => {
+                      setCampaignBg(bg.key);
+                      setCampaignTemplateId(undefined);
+                      setPosts((arr) => arr.map((p) => (p.enabled ? { ...p, background: bg.key, templateId: undefined } : p)));
+                    }}
+                    className={cn("h-16 rounded-lg border-2 text-xs font-medium text-white transition", campaignBg === bg.key && !campaignTemplateId ? "border-foreground ring-2 ring-ring" : "border-transparent")}
+                    style={{ background: bg.css }}
+                  >
+                    {bg.label}
+                  </button>
+                ))}
+              </div>
+              {state.templates.length > 0 && (
+                <div className="space-y-2">
+                  <h3 className="text-sm font-semibold">Brand templates</h3>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                    {state.templates.map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => {
+                          setCampaignTemplateId(t.id);
+                          setCampaignBg(BACKGROUND_PRESETS[0].key);
+                          setPosts((arr) => arr.map((p) => (p.enabled ? { ...p, templateId: t.id, background: BACKGROUND_PRESETS[0].key } : p)));
+                        }}
+                        className={cn("overflow-hidden rounded-lg border-2 transition", campaignTemplateId === t.id ? "border-foreground ring-2 ring-ring" : "border-transparent")}
+                      >
+                        <img src={t.dataUrl} alt={t.name} className="aspect-[3/2] w-full object-cover" />
+                        <div className="bg-muted px-2 py-1 text-xs text-center">{t.name}</div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
