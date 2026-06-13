@@ -211,7 +211,11 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     updateCampaign: (id, patch) => dispatch({ type: "UPDATE_CAMPAIGN", id, patch }),
     addTemplate: (template) => dispatch({ type: "ADD_TEMPLATE", template }),
     removeTemplate: (id) => dispatch({ type: "REMOVE_TEMPLATE", id }),
+    addBrandImage: (image) => dispatch({ type: "ADD_BRAND_IMAGE", image }),
+    updateBrandImage: (id, patch) => dispatch({ type: "UPDATE_BRAND_IMAGE", id, patch }),
+    removeBrandImage: (id) => dispatch({ type: "REMOVE_BRAND_IMAGE", id }),
     reset: () => dispatch({ type: "RESET" }),
+
   };
 
   return <WorkspaceContext.Provider value={value}>{children}</WorkspaceContext.Provider>;
