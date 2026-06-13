@@ -17,7 +17,7 @@ import { Route as BrandRouteImport } from './routes/brand'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CampaignsIndexRouteImport } from './routes/campaigns.index'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns_.new'
-import { Route as CampaignsIdRouteImport } from './routes/campaigns.$id'
+import { Route as CampaignsIdRouteImport } from './routes/campaigns_.$id'
 
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
@@ -60,7 +60,7 @@ const CampaignsNewRoute = CampaignsNewRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CampaignsIdRoute = CampaignsIdRouteImport.update({
-  id: '/campaigns/$id',
+  id: '/campaigns_/$id',
   path: '/campaigns/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
@@ -95,7 +95,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
-  '/campaigns/$id': typeof CampaignsIdRoute
+  '/campaigns_/$id': typeof CampaignsIdRoute
   '/campaigns_/new': typeof CampaignsNewRoute
   '/campaigns/': typeof CampaignsIndexRoute
 }
@@ -130,7 +130,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/onboarding'
     | '/settings'
-    | '/campaigns/$id'
+    | '/campaigns_/$id'
     | '/campaigns_/new'
     | '/campaigns/'
   fileRoutesById: FileRoutesById
@@ -205,8 +205,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CampaignsNewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/campaigns/$id': {
-      id: '/campaigns/$id'
+    '/campaigns_/$id': {
+      id: '/campaigns_/$id'
       path: '/campaigns/$id'
       fullPath: '/campaigns/$id'
       preLoaderRoute: typeof CampaignsIdRouteImport
