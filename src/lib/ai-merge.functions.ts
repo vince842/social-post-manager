@@ -2,8 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const InputSchema = z.object({
-  prompt: z.string().min(1),
-  images: z.array(z.string().min(10)).min(1).max(4), // data URLs or https
+  prompt: z.string().min(1).max(2000),
+  // Restrict to inline base64 data URLs only — prevents SSRF via arbitrary https URLs
+  // being fetched server-side by the AI gateway.
+  images: z
+    .array(z.string().regex(/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/, "Only base64 image data URLs are allowed"))
+    .min(1)
+    .max(4),
   count: z.number().int().min(1).max(4).default(3),
 });
 
@@ -28,7 +33,10 @@ async function generateOne(apiKey: string, prompt: string, images: string[]): Pr
 
   if (!res.ok) {
     const text = await res.text().catch(() => "");
-    throw new Error(`AI gateway ${res.status}: ${text.slice(0, 200)}`);
+    console.error("AI gateway error", res.status, text);
+    if (res.status === 429) throw new Error("Rate limit reached. Please try again shortly.");
+    if (res.status === 402) throw new Error("AI credits exhausted. Please try again later.");
+    throw new Error("Image generation failed. Please try again.");
   }
   const json = (await res.json()) as { data?: Array<{ b64_json?: string }> };
   const b64 = json.data?.[0]?.b64_json;
