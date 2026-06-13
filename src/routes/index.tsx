@@ -13,7 +13,6 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const { state } = useWorkspace();
   const navigate = useNavigate();
 
   useEffect(() => {
