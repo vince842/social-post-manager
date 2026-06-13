@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { Calendar, LayoutDashboard, Megaphone, Palette, Settings as SettingsIcon, Sparkles } from "lucide-react";
+import { Calendar, LayoutDashboard, Megaphone, Palette, Settings as SettingsIcon, Sparkles, Zap } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -19,6 +19,7 @@ import { useWorkspace } from "@/lib/workspace-context";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/campaigns/new", label: "Autopilot", icon: Zap },
   { to: "/campaigns", label: "Campaigns", icon: Megaphone },
   { to: "/brand", label: "Brand Assets", icon: Palette },
   { to: "/calendar", label: "Calendar", icon: Calendar },
@@ -84,7 +85,7 @@ function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {NAV.map((item) => {
-                const active = pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(item.to));
+                const active = pathname === item.to || pathname === item.to + "/";
                 return (
                   <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton asChild isActive={active}>
