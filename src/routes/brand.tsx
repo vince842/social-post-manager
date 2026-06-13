@@ -17,7 +17,7 @@ export const Route = createFileRoute("/brand")({
 });
 
 function Brand() {
-  const { state, addTemplate, removeTemplate } = useWorkspace();
+  const { state, addTemplate, removeTemplate, addBrandImage, updateBrandImage, removeBrandImage } = useWorkspace();
   const org = state.organization;
   const fileRef = useRef<HTMLInputElement | null>(null);
   const [busy, setBusy] = useState(false);
