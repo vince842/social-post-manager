@@ -1,6 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { useWorkspace } from "@/lib/workspace-context";
 
 export const Route = createFileRoute("/")({
   head: () => ({
