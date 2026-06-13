@@ -12,10 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as CampaignsRouteImport } from './routes/campaigns'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as BrandRouteImport } from './routes/brand'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CampaignsIndexRouteImport } from './routes/campaigns.index'
 import { Route as CampaignsNewRouteImport } from './routes/campaigns_.new'
 import { Route as CampaignsIdRouteImport } from './routes/campaigns.$id'
 
@@ -34,11 +34,6 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CampaignsRoute = CampaignsRouteImport.update({
-  id: '/campaigns',
-  path: '/campaigns',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -54,50 +49,55 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CampaignsIndexRoute = CampaignsIndexRouteImport.update({
+  id: '/campaigns/',
+  path: '/campaigns/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CampaignsNewRoute = CampaignsNewRouteImport.update({
   id: '/campaigns_/new',
   path: '/campaigns/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CampaignsIdRoute = CampaignsIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => CampaignsRoute,
+  id: '/campaigns/$id',
+  path: '/campaigns/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/calendar': typeof CalendarRoute
-  '/campaigns': typeof CampaignsRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/campaigns/$id': typeof CampaignsIdRoute
   '/campaigns/new': typeof CampaignsNewRoute
+  '/campaigns/': typeof CampaignsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/calendar': typeof CalendarRoute
-  '/campaigns': typeof CampaignsRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/campaigns/$id': typeof CampaignsIdRoute
   '/campaigns/new': typeof CampaignsNewRoute
+  '/campaigns': typeof CampaignsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/brand': typeof BrandRoute
   '/calendar': typeof CalendarRoute
-  '/campaigns': typeof CampaignsRouteWithChildren
   '/dashboard': typeof DashboardRoute
   '/onboarding': typeof OnboardingRoute
   '/settings': typeof SettingsRoute
   '/campaigns/$id': typeof CampaignsIdRoute
   '/campaigns_/new': typeof CampaignsNewRoute
+  '/campaigns/': typeof CampaignsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -105,45 +105,46 @@ export interface FileRouteTypes {
     | '/'
     | '/brand'
     | '/calendar'
-    | '/campaigns'
     | '/dashboard'
     | '/onboarding'
     | '/settings'
     | '/campaigns/$id'
     | '/campaigns/new'
+    | '/campaigns/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/brand'
     | '/calendar'
-    | '/campaigns'
     | '/dashboard'
     | '/onboarding'
     | '/settings'
     | '/campaigns/$id'
     | '/campaigns/new'
+    | '/campaigns'
   id:
     | '__root__'
     | '/'
     | '/brand'
     | '/calendar'
-    | '/campaigns'
     | '/dashboard'
     | '/onboarding'
     | '/settings'
     | '/campaigns/$id'
     | '/campaigns_/new'
+    | '/campaigns/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BrandRoute: typeof BrandRoute
   CalendarRoute: typeof CalendarRoute
-  CampaignsRoute: typeof CampaignsRouteWithChildren
   DashboardRoute: typeof DashboardRoute
   OnboardingRoute: typeof OnboardingRoute
   SettingsRoute: typeof SettingsRoute
+  CampaignsIdRoute: typeof CampaignsIdRoute
   CampaignsNewRoute: typeof CampaignsNewRoute
+  CampaignsIndexRoute: typeof CampaignsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -169,13 +170,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/campaigns': {
-      id: '/campaigns'
-      path: '/campaigns'
-      fullPath: '/campaigns'
-      preLoaderRoute: typeof CampaignsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/calendar': {
       id: '/calendar'
       path: '/calendar'
@@ -197,6 +191,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/campaigns/': {
+      id: '/campaigns/'
+      path: '/campaigns'
+      fullPath: '/campaigns/'
+      preLoaderRoute: typeof CampaignsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/campaigns_/new': {
       id: '/campaigns_/new'
       path: '/campaigns/new'
@@ -206,35 +207,24 @@ declare module '@tanstack/react-router' {
     }
     '/campaigns/$id': {
       id: '/campaigns/$id'
-      path: '/$id'
+      path: '/campaigns/$id'
       fullPath: '/campaigns/$id'
       preLoaderRoute: typeof CampaignsIdRouteImport
-      parentRoute: typeof CampaignsRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface CampaignsRouteChildren {
-  CampaignsIdRoute: typeof CampaignsIdRoute
-}
-
-const CampaignsRouteChildren: CampaignsRouteChildren = {
-  CampaignsIdRoute: CampaignsIdRoute,
-}
-
-const CampaignsRouteWithChildren = CampaignsRoute._addFileChildren(
-  CampaignsRouteChildren,
-)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BrandRoute: BrandRoute,
   CalendarRoute: CalendarRoute,
-  CampaignsRoute: CampaignsRouteWithChildren,
   DashboardRoute: DashboardRoute,
   OnboardingRoute: OnboardingRoute,
   SettingsRoute: SettingsRoute,
+  CampaignsIdRoute: CampaignsIdRoute,
   CampaignsNewRoute: CampaignsNewRoute,
+  CampaignsIndexRoute: CampaignsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
