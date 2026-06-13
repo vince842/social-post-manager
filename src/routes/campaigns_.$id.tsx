@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { format, parseISO } from "date-fns";
-import { ArrowLeft, Calendar as CalIcon, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, Calendar as CalIcon, Save, Trash2, Rocket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -165,16 +165,29 @@ function EditCampaign() {
         </div>
 
         <div className="sticky bottom-4 flex items-center justify-between gap-3 rounded-2xl border bg-background/95 p-3 shadow-lg backdrop-blur">
-          <Button
-            variant="ghost"
-            className="text-destructive"
-            onClick={() => {
-              updateCampaign(campaign.id, { status: "draft" });
-              toast.message("Moved to draft");
-            }}
-          >
-            <Trash2 className="mr-1 h-4 w-4" /> Move to draft
-          </Button>
+          {campaign.status === "scheduled" ? (
+            <Button
+              variant="ghost"
+              className="text-destructive"
+              onClick={() => {
+                updateCampaign(campaign.id, { status: "draft" });
+                toast.message("Moved to draft");
+              }}
+            >
+              <Trash2 className="mr-1 h-4 w-4" /> Move to draft
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              className="text-primary"
+              onClick={() => {
+                updateCampaign(campaign.id, { status: "scheduled" });
+                toast.success("Moved to scheduled");
+              }}
+            >
+              <Rocket className="mr-1 h-4 w-4" /> Move to scheduled
+            </Button>
+          )}
           <Button onClick={save} disabled={!name.trim() || !description.trim() || !eventDate}>
             <Save className="mr-1 h-4 w-4" /> Save changes
           </Button>
