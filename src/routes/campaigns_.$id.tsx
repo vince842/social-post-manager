@@ -26,7 +26,8 @@ export const Route = createFileRoute("/campaigns_/$id")({
 
 function EditCampaign() {
   const { id } = Route.useParams();
-  const { state, updateCampaign } = useWorkspace();
+  const { state, updateCampaign, addBrandImage } = useWorkspace();
+
   const navigate = useNavigate();
   const campaign = state.campaigns.find((c) => c.id === id);
 
