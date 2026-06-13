@@ -28,6 +28,7 @@ export interface ScheduledPost {
   header: string;
   caption: string;
   background: string; // gradient key
+  templateId?: string; // optional brand template image
   enabled: boolean;
 }
 
@@ -41,11 +42,19 @@ export interface Campaign {
   posts: ScheduledPost[];
 }
 
+export interface Template {
+  id: string;
+  name: string;
+  dataUrl: string; // cropped/sized to 3:2
+  createdAt: string;
+}
+
 export interface WorkspaceState {
   onboarded: boolean;
   organization: Organization;
   connections: Connections;
   campaigns: Campaign[];
+  templates: Template[];
 }
 
 const defaultState: WorkspaceState = {
@@ -61,6 +70,7 @@ const defaultState: WorkspaceState = {
   },
   connections: { facebook: false, instagram: false, linkedin: false },
   campaigns: [],
+  templates: [],
 };
 
 type Action =
@@ -70,6 +80,8 @@ type Action =
   | { type: "TOGGLE_CONNECTION"; key: keyof Connections; value: boolean }
   | { type: "ADD_CAMPAIGN"; campaign: Campaign }
   | { type: "UPDATE_CAMPAIGN"; id: string; patch: Partial<Campaign> }
+  | { type: "ADD_TEMPLATE"; template: Template }
+  | { type: "REMOVE_TEMPLATE"; id: string }
   | { type: "RESET" };
 
 function reducer(state: WorkspaceState, action: Action): WorkspaceState {
@@ -81,6 +93,7 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
         organization: { ...defaultState.organization, ...(action.state?.organization ?? {}) },
         connections: { ...defaultState.connections, ...(action.state?.connections ?? {}) },
         campaigns: Array.isArray(action.state?.campaigns) ? action.state.campaigns : [],
+        templates: Array.isArray(action.state?.templates) ? action.state.templates : [],
       };
     case "UPDATE_ORG":
       return { ...state, organization: { ...state.organization, ...action.patch } };
@@ -94,6 +107,17 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
       return {
         ...state,
         campaigns: state.campaigns.map((c) => (c.id === action.id ? { ...c, ...action.patch } : c)),
+      };
+    case "ADD_TEMPLATE":
+      return { ...state, templates: [action.template, ...state.templates] };
+    case "REMOVE_TEMPLATE":
+      return {
+        ...state,
+        templates: state.templates.filter((t) => t.id !== action.id),
+        campaigns: state.campaigns.map((c) => ({
+          ...c,
+          posts: c.posts.map((p) => (p.templateId === action.id ? { ...p, templateId: undefined } : p)),
+        })),
       };
     case "RESET":
       return defaultState;
@@ -111,6 +135,8 @@ interface Ctx {
   toggleConnection: (key: keyof Connections, value: boolean) => void;
   addCampaign: (c: Campaign) => void;
   updateCampaign: (id: string, patch: Partial<Campaign>) => void;
+  addTemplate: (t: Template) => void;
+  removeTemplate: (id: string) => void;
   reset: () => void;
 }
 
@@ -145,6 +171,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     toggleConnection: (key, value) => dispatch({ type: "TOGGLE_CONNECTION", key, value }),
     addCampaign: (campaign) => dispatch({ type: "ADD_CAMPAIGN", campaign }),
     updateCampaign: (id, patch) => dispatch({ type: "UPDATE_CAMPAIGN", id, patch }),
+    addTemplate: (template) => dispatch({ type: "ADD_TEMPLATE", template }),
+    removeTemplate: (id) => dispatch({ type: "REMOVE_TEMPLATE", id }),
     reset: () => dispatch({ type: "RESET" }),
   };
 

@@ -224,8 +224,8 @@ function NewCampaign() {
                     <button
                       key={bg.key}
                       type="button"
-                      onClick={() => setPosts((arr) => arr.map((x) => x.id === editing.id ? { ...x, background: bg.key } : x))}
-                      className={cn("h-16 rounded-lg border-2 text-xs font-medium text-white transition", editing.background === bg.key ? "border-foreground ring-2 ring-ring" : "border-transparent")}
+                      onClick={() => setPosts((arr) => arr.map((x) => x.id === editing.id ? { ...x, background: bg.key, templateId: undefined } : x))}
+                      className={cn("h-16 rounded-lg border-2 text-xs font-medium text-white transition", editing.background === bg.key && !editing.templateId ? "border-foreground ring-2 ring-ring" : "border-transparent")}
                       style={{ background: bg.css }}
                     >
                       {bg.label}
@@ -233,6 +233,23 @@ function NewCampaign() {
                   ))}
                 </div>
               </div>
+              {state.templates.length > 0 && (
+                <div className="space-y-2">
+                  <Label>Or pick a brand template</Label>
+                  <div className="grid grid-cols-2 gap-2">
+                    {state.templates.map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => setPosts((arr) => arr.map((x) => x.id === editing.id ? { ...x, templateId: t.id } : x))}
+                        className={cn("overflow-hidden rounded-lg border-2 transition", editing.templateId === t.id ? "border-foreground ring-2 ring-ring" : "border-transparent")}
+                      >
+                        <img src={t.dataUrl} alt={t.name} className="aspect-[3/2] w-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </SheetContent>
@@ -270,10 +287,14 @@ function PlanRow({ post, onToggle }: { post: ScheduledPost; onToggle: (v: boolea
 function PostPreview({ post, onEdit }: { post: ScheduledPost; onEdit: () => void }) {
   const { state } = useWorkspace();
   const bg = useMemo(() => BACKGROUND_PRESETS.find((b) => b.key === post.background)?.css ?? BACKGROUND_PRESETS[0].css, [post.background]);
+  const template = post.templateId ? state.templates.find((t) => t.id === post.templateId) : undefined;
 
   return (
     <button type="button" onClick={onEdit} className="group block overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:shadow-md">
-      <div className="relative aspect-square w-full p-5 text-white" style={{ background: bg }}>
+      <div className="relative aspect-square w-full p-5 text-white" style={!template ? { background: bg } : undefined}>
+        {template && (
+          <img src={template.dataUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        )}
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${state.organization.primaryColor}99 100%)` }} />
         <div className="relative flex h-full flex-col justify-between">
           <div className="flex items-center gap-2">
