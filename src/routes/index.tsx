@@ -17,8 +17,8 @@ function Index() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    navigate({ to: state.onboarded ? "/dashboard" : "/onboarding", replace: true });
-  }, [state.onboarded, navigate]);
+    navigate({ to: "/dashboard", replace: true });
+  }, [navigate]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background">
