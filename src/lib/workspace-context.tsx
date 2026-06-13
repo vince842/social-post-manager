@@ -171,6 +171,8 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     toggleConnection: (key, value) => dispatch({ type: "TOGGLE_CONNECTION", key, value }),
     addCampaign: (campaign) => dispatch({ type: "ADD_CAMPAIGN", campaign }),
     updateCampaign: (id, patch) => dispatch({ type: "UPDATE_CAMPAIGN", id, patch }),
+    addTemplate: (template) => dispatch({ type: "ADD_TEMPLATE", template }),
+    removeTemplate: (id) => dispatch({ type: "REMOVE_TEMPLATE", id }),
     reset: () => dispatch({ type: "RESET" }),
   };
 
