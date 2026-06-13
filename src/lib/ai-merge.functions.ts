@@ -2,8 +2,13 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
 const InputSchema = z.object({
-  prompt: z.string().min(1),
-  images: z.array(z.string().min(10)).min(1).max(4), // data URLs or https
+  prompt: z.string().min(1).max(2000),
+  // Restrict to inline base64 data URLs only — prevents SSRF via arbitrary https URLs
+  // being fetched server-side by the AI gateway.
+  images: z
+    .array(z.string().regex(/^data:image\/(png|jpe?g|webp|gif);base64,[A-Za-z0-9+/=]+$/, "Only base64 image data URLs are allowed"))
+    .min(1)
+    .max(4),
   count: z.number().int().min(1).max(4).default(3),
 });
 
