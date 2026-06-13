@@ -19,6 +19,7 @@ import { useWorkspace } from "@/lib/workspace-context";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/campaigns/new", label: "Autopilot", icon: Zap },
   { to: "/campaigns", label: "Campaigns", icon: Megaphone },
   { to: "/brand", label: "Brand Assets", icon: Palette },
   { to: "/calendar", label: "Calendar", icon: Calendar },
