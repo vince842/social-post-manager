@@ -36,6 +36,8 @@ function NewCampaign() {
   const [eventDate, setEventDate] = useState<Date | undefined>();
   const [posts, setPosts] = useState<ScheduledPost[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [campaignBg, setCampaignBg] = useState<string>(BACKGROUND_PRESETS[0].key);
+  const [campaignTemplateId, setCampaignTemplateId] = useState<string | undefined>(undefined);
 
   const editing = posts.find((p) => p.id === editingId) || null;
 
