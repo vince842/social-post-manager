@@ -65,8 +65,8 @@ function Onboarding() {
 
         <Card className="rounded-2xl shadow-sm">
           <CardContent className="p-6 sm:p-8">
-            {step === 1 && <StepOrg />}
-            {step === 2 && <StepBrand />}
+            {step === 1 && <StepOrg organization={state.organization} updateOrg={updateOrg} />}
+            {step === 2 && <StepBrand organization={state.organization} updateOrg={updateOrg} />}
             {step === 3 && <StepConnections connections={state.connections} onToggle={toggleConnection} />}
 
             <div className="mt-8 flex items-center justify-between gap-3">
