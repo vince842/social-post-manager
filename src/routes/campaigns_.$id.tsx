@@ -17,7 +17,7 @@ import { formatDate } from "@/lib/campaign-helpers";
 import { AppShell } from "@/components/app-shell";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/campaigns/$id")({
+export const Route = createFileRoute("/campaigns_/$id")({
   head: () => ({ meta: [{ title: "Edit Campaign · Autopilot" }] }),
   component: EditCampaign,
 });
