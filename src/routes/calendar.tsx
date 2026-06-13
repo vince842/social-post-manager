@@ -7,6 +7,7 @@ import { useWorkspace, POST_ROLE_LABEL } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
 import { cn } from "@/lib/utils";
 import { AppShell } from "@/components/app-shell";
+import { PostCardVisual } from "@/components/post-card";
 
 export const Route = createFileRoute("/calendar")({
   head: () => ({ meta: [{ title: "Calendar · Autopilot" }] }),
