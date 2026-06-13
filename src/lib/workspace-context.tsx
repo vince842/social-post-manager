@@ -95,6 +95,9 @@ type Action =
   | { type: "UPDATE_CAMPAIGN"; id: string; patch: Partial<Campaign> }
   | { type: "ADD_TEMPLATE"; template: Template }
   | { type: "REMOVE_TEMPLATE"; id: string }
+  | { type: "ADD_BRAND_IMAGE"; image: BrandImage }
+  | { type: "UPDATE_BRAND_IMAGE"; id: string; patch: Partial<BrandImage> }
+  | { type: "REMOVE_BRAND_IMAGE"; id: string }
   | { type: "RESET" };
 
 function reducer(state: WorkspaceState, action: Action): WorkspaceState {
@@ -107,6 +110,7 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
         connections: { ...defaultState.connections, ...(action.state?.connections ?? {}) },
         campaigns: Array.isArray(action.state?.campaigns) ? action.state.campaigns : [],
         templates: Array.isArray(action.state?.templates) ? action.state.templates : [],
+        brandImages: Array.isArray(action.state?.brandImages) ? action.state.brandImages : [],
       };
     case "UPDATE_ORG":
       return { ...state, organization: { ...state.organization, ...action.patch } };
@@ -132,12 +136,29 @@ function reducer(state: WorkspaceState, action: Action): WorkspaceState {
           posts: c.posts.map((p) => (p.templateId === action.id ? { ...p, templateId: undefined } : p)),
         })),
       };
+    case "ADD_BRAND_IMAGE":
+      return { ...state, brandImages: [action.image, ...state.brandImages] };
+    case "UPDATE_BRAND_IMAGE":
+      return {
+        ...state,
+        brandImages: state.brandImages.map((b) => (b.id === action.id ? { ...b, ...action.patch } : b)),
+      };
+    case "REMOVE_BRAND_IMAGE":
+      return {
+        ...state,
+        brandImages: state.brandImages.filter((b) => b.id !== action.id),
+        campaigns: state.campaigns.map((c) => ({
+          ...c,
+          posts: c.posts.map((p) => (p.imageId === action.id ? { ...p, imageId: undefined } : p)),
+        })),
+      };
     case "RESET":
       return defaultState;
     default:
       return state;
   }
 }
+
 
 const STORAGE_KEY = "autopilot.workspace.v1";
 
