@@ -171,8 +171,12 @@ interface Ctx {
   updateCampaign: (id: string, patch: Partial<Campaign>) => void;
   addTemplate: (t: Template) => void;
   removeTemplate: (id: string) => void;
+  addBrandImage: (img: BrandImage) => void;
+  updateBrandImage: (id: string, patch: Partial<BrandImage>) => void;
+  removeBrandImage: (id: string) => void;
   reset: () => void;
 }
+
 
 const WorkspaceContext = createContext<Ctx | null>(null);
 
