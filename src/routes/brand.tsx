@@ -1,13 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef, useState } from "react";
-import { Upload, Trash2, ImagePlus } from "lucide-react";
+import { Upload, Trash2, ImagePlus, Tag, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useWorkspace, ORG_TYPE_LABEL, TONE_LABEL, type Template } from "@/lib/workspace-context";
+import { Input } from "@/components/ui/input";
+import { useWorkspace, ORG_TYPE_LABEL, TONE_LABEL, type Template, type BrandImage } from "@/lib/workspace-context";
 import { AppShell } from "@/components/app-shell";
-import { fileTo3x2DataUrl } from "@/lib/image-resize";
+import { fileTo3x2DataUrl, fileToSquareDataUrl } from "@/lib/image-resize";
 import { toast } from "sonner";
+
 
 export const Route = createFileRoute("/brand")({
   head: () => ({ meta: [{ title: "Brand Assets · Autopilot" }] }),
