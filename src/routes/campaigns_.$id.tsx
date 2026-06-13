@@ -177,7 +177,15 @@ function EditCampaign() {
                     </div>
                   </div>
                 )}
+
+                <BrandImagePicker
+                  brandImages={state.brandImages}
+                  selectedId={p.imageId}
+                  onSelect={(imageId) => updatePost(p.id, { imageId })}
+                  onUpload={addBrandImage}
+                />
               </CardContent>
+
             </Card>
           ))}
         </div>
