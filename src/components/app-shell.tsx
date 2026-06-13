@@ -85,7 +85,7 @@ function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {NAV.map((item) => {
-                const active = pathname === item.to || (item.to !== "/dashboard" && pathname.startsWith(item.to));
+                const active = pathname === item.to || pathname === item.to + "/";
                 return (
                   <SidebarMenuItem key={item.to}>
                     <SidebarMenuButton asChild isActive={active}>
