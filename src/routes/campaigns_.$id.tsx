@@ -133,8 +133,8 @@ function EditCampaign() {
                       <button
                         key={bg.key}
                         type="button"
-                        onClick={() => updatePost(p.id, { background: bg.key })}
-                        className={cn("h-14 rounded-lg border-2 text-xs font-medium text-white transition", p.background === bg.key ? "border-foreground ring-2 ring-ring" : "border-transparent")}
+                        onClick={() => updatePost(p.id, { background: bg.key, templateId: undefined })}
+                        className={cn("h-14 rounded-lg border-2 text-xs font-medium text-white transition", p.background === bg.key && !p.templateId ? "border-foreground ring-2 ring-ring" : "border-transparent")}
                         style={{ background: bg.css }}
                       >
                         {bg.label}
@@ -142,6 +142,23 @@ function EditCampaign() {
                     ))}
                   </div>
                 </div>
+                {state.templates.length > 0 && (
+                  <div className="space-y-2">
+                    <Label>Or pick a brand template</Label>
+                    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                      {state.templates.map((t) => (
+                        <button
+                          key={t.id}
+                          type="button"
+                          onClick={() => updatePost(p.id, { templateId: t.id })}
+                          className={cn("overflow-hidden rounded-lg border-2 transition", p.templateId === t.id ? "border-foreground ring-2 ring-ring" : "border-transparent")}
+                        >
+                          <img src={t.dataUrl} alt={t.name} className="aspect-[3/2] w-full object-cover" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           ))}
