@@ -71,15 +71,20 @@ function CalendarPage() {
                   key={day}
                   onClick={() => setSelected(dateStr)}
                   className={cn(
-                    "aspect-square rounded-lg border p-1 text-left text-sm transition hover:bg-muted",
+                    "min-h-20 rounded-lg border p-1 text-left text-sm transition hover:bg-muted",
                     isSelected && "border-primary bg-primary/5"
                   )}
                 >
                   <div className="text-xs">{day}</div>
-                  <div className="mt-1 flex flex-wrap gap-0.5">
-                    {dPosts.slice(0, 3).map((p) => (
-                      <span key={p.id} className="h-1.5 w-1.5 rounded-full bg-primary" title={p.header} />
+                  <div className="mt-1 flex flex-col gap-1">
+                    {dPosts.slice(0, 2).map((p) => (
+                      <div key={p.id} className="overflow-hidden rounded">
+                        <PostCardVisual post={p} size="sm" />
+                      </div>
                     ))}
+                    {dPosts.length > 2 && (
+                      <div className="text-[10px] text-muted-foreground">+{dPosts.length - 2} more</div>
+                    )}
                   </div>
                 </button>
               );
