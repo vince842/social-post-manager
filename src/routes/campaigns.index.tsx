@@ -7,7 +7,7 @@ import { useWorkspace } from "@/lib/workspace-context";
 import { formatDate } from "@/lib/campaign-helpers";
 import { AppShell } from "@/components/app-shell";
 
-export const Route = createFileRoute("/campaigns")({
+export const Route = createFileRoute("/campaigns/")({
   head: () => ({ meta: [{ title: "Campaigns · Autopilot" }] }),
   component: Campaigns,
 });
