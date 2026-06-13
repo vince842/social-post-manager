@@ -100,13 +100,15 @@ function CalendarPage() {
             {selectedPosts.length === 0 ? (
               <p className="text-sm text-muted-foreground">Nothing scheduled for this day.</p>
             ) : (
-              <ul className="divide-y">
+              <ul className="grid gap-4 sm:grid-cols-2">
                 {selectedPosts.map((p) => (
-                  <li key={p.id} className="py-3">
-                    <div className="text-xs uppercase tracking-wide text-muted-foreground">{POST_ROLE_LABEL[p.role]} · {p.campaignName}</div>
-                    <div className="font-medium">{p.header}</div>
-                    <div className="text-sm text-muted-foreground">{p.caption}</div>
-                    <div className="mt-1 text-xs text-muted-foreground">{formatDate(p.date)}</div>
+                  <li key={p.id} className="space-y-2">
+                    <PostCardVisual post={p} />
+                    <div>
+                      <div className="text-xs uppercase tracking-wide text-muted-foreground">{POST_ROLE_LABEL[p.role]} · {p.campaignName}</div>
+                      <div className="text-sm text-muted-foreground">{p.caption}</div>
+                      <div className="mt-1 text-xs text-muted-foreground">{formatDate(p.date)}</div>
+                    </div>
                   </li>
                 ))}
               </ul>
