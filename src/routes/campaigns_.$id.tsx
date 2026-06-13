@@ -367,3 +367,129 @@ function BrandImagePicker({
   );
 }
 
+function AIMergePanel({
+  post,
+  brandImages,
+  templates,
+  onAddImage,
+  onSelect,
+}: {
+  post: ScheduledPost;
+  brandImages: BrandImage[];
+  templates: Template[];
+  onAddImage: (img: BrandImage) => void;
+  onSelect: (id: string) => void;
+}) {
+  const generate = useServerFn(generateMergedImages);
+  const allTags = Array.from(new Set(brandImages.flatMap((i) => i.tags))).sort();
+  const [tag, setTag] = useState<string>(allTags[0] ?? "");
+  const [busy, setBusy] = useState(false);
+  const [variants, setVariants] = useState<string[]>([]);
+
+  const matching = tag ? brandImages.filter((i) => i.tags.includes(tag)) : [];
+  const template = templates.find((t) => t.id === post.templateId);
+
+  const run = async () => {
+    if (matching.length === 0) {
+      toast.error("No brand photos with that tag");
+      return;
+    }
+    const sources: string[] = [];
+    if (template) sources.push(template.dataUrl);
+    sources.push(...matching.slice(0, 3).map((m) => m.dataUrl));
+
+    const prompt = [
+      `Create a square social media post visual that merges the provided ${template ? "brand template and " : ""}brand photo${matching.length > 1 ? "s" : ""}.`,
+      `Theme: "${post.header}". Caption context: "${post.caption}".`,
+      `The result should feel on-brand, cohesive, and ready to post.`,
+    ].join(" ");
+
+    setBusy(true);
+    setVariants([]);
+    try {
+      const res = await generate({ data: { prompt, images: sources, count: 3 } });
+      setVariants(res.images);
+      if (res.images.length < 3) toast.message(`Generated ${res.images.length} of 3 — try again for more options`);
+    } catch (e) {
+      console.error(e);
+      toast.error("AI merge failed. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const choose = (dataUrl: string, idx: number) => {
+    const img: BrandImage = {
+      id: crypto.randomUUID(),
+      name: `AI merge · ${tag || "untagged"} · ${idx + 1}`,
+      dataUrl,
+      tags: [tag, "ai-merge"].filter(Boolean),
+      createdAt: new Date().toISOString(),
+    };
+    onAddImage(img);
+    onSelect(img.id);
+    toast.success("Merged photo saved to your brand folder");
+    setVariants([]);
+  };
+
+  return (
+    <div className="space-y-3 rounded-xl border bg-muted/30 p-3">
+      <div className="flex items-center gap-2">
+        <Sparkles className="h-4 w-4 text-primary" />
+        <Label className="m-0">AI merge with template</Label>
+      </div>
+
+      {allTags.length === 0 ? (
+        <p className="text-xs text-muted-foreground">
+          Tag some brand photos first, then you can merge them with your template using AI.
+        </p>
+      ) : (
+        <>
+          <div className="space-y-1.5">
+            <p className="text-xs text-muted-foreground">Pick a tag to merge with the template</p>
+            <div className="flex flex-wrap gap-1.5">
+              {allTags.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTag(t)}
+                  className={cn(
+                    "rounded-full border px-2.5 py-0.5 text-[11px]",
+                    tag === t ? "bg-foreground text-background" : "bg-background",
+                  )}
+                >
+                  #{t}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <Button type="button" size="sm" onClick={run} disabled={busy || !tag}>
+            {busy ? <Loader2 className="mr-1 h-3 w-3 animate-spin" /> : <Sparkles className="mr-1 h-3 w-3" />}
+            {busy ? "Generating 3 options…" : "Generate 3 AI merges"}
+          </Button>
+
+          {variants.length > 0 && (
+            <div className="space-y-1.5">
+              <p className="text-xs text-muted-foreground">Pick your favourite — it will be saved to your brand folder</p>
+              <div className="grid grid-cols-3 gap-2">
+                {variants.map((src, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => choose(src, i)}
+                    className="group overflow-hidden rounded-lg border-2 border-transparent transition hover:border-foreground"
+                  >
+                    <img src={src} alt={`AI merge option ${i + 1}`} className="aspect-square w-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+
