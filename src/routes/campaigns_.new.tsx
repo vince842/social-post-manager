@@ -287,10 +287,14 @@ function PlanRow({ post, onToggle }: { post: ScheduledPost; onToggle: (v: boolea
 function PostPreview({ post, onEdit }: { post: ScheduledPost; onEdit: () => void }) {
   const { state } = useWorkspace();
   const bg = useMemo(() => BACKGROUND_PRESETS.find((b) => b.key === post.background)?.css ?? BACKGROUND_PRESETS[0].css, [post.background]);
+  const template = post.templateId ? state.templates.find((t) => t.id === post.templateId) : undefined;
 
   return (
     <button type="button" onClick={onEdit} className="group block overflow-hidden rounded-2xl border bg-card text-left shadow-sm transition hover:shadow-md">
-      <div className="relative aspect-square w-full p-5 text-white" style={{ background: bg }}>
+      <div className="relative aspect-square w-full p-5 text-white" style={!template ? { background: bg } : undefined}>
+        {template && (
+          <img src={template.dataUrl} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        )}
         <div className="absolute inset-0" style={{ background: `linear-gradient(180deg, transparent 0%, ${state.organization.primaryColor}99 100%)` }} />
         <div className="relative flex h-full flex-col justify-between">
           <div className="flex items-center gap-2">
