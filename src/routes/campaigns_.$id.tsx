@@ -186,6 +186,14 @@ function EditCampaign() {
                   onSelect={(imageId) => updatePost(p.id, { imageId })}
                   onUpload={addBrandImage}
                 />
+
+                <AIMergePanel
+                  post={p}
+                  brandImages={state.brandImages}
+                  templates={state.templates}
+                  onAddImage={addBrandImage}
+                  onSelect={(imageId) => updatePost(p.id, { imageId })}
+                />
               </CardContent>
 
             </Card>
