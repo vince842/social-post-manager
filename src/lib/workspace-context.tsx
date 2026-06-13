@@ -82,7 +82,9 @@ const defaultState: WorkspaceState = {
   connections: { facebook: false, instagram: false, linkedin: false },
   campaigns: [],
   templates: [],
+  brandImages: [],
 };
+
 
 type Action =
   | { type: "HYDRATE"; state: WorkspaceState }
